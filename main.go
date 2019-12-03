@@ -5,7 +5,9 @@ import (
 	"html/template"
 	"net/http"
 
-	"C:\Users/~_RipTor_~/IdeaProjects/awesomeProject/models"
+	"./models"
+
+	"github.com/codegangsta/martini"
 )
 
 var posts map[string]*models.Post
@@ -84,12 +86,14 @@ func main() {
 
 	posts = make(map[string]*models.Post, 0)
 
+	m := martini.Classic()
+
 	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("./assets/"))))
-	http.HandleFunc("/", indexHandler)
-	http.HandleFunc("/write", writeHandler)
-	http.HandleFunc("/edit", editHandler)
-	http.HandleFunc("/delete", deleteHandler)
-	http.HandleFunc("/SavePost", savePostHandler)
+	m.Get("/", indexHandler)
+	m.Get("/write", writeHandler)
+	m.Get("/edit", editHandler)
+	m.Get("/delete", deleteHandler)
+	m.Get("/SavePost", savePostHandler)
 
 	http.ListenAndServe(":3000", nil)
 }
